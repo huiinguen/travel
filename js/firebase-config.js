@@ -114,10 +114,29 @@ document.getElementById('show-signup').addEventListener('click', (e) => {
     document.getElementById('email-signup-form').style.display = 'block';
 });
 
-document.getElementById('show-login').addEventListener('click', (e) => {
-    e.preventDefault();
-    document.getElementById('email-signup-form').style.display = 'none';
-    document.getElementById('email-login-form').style.display = 'block';
+// Đăng xuất
+document.getElementById('logout-btn').addEventListener('click', () => {
+    // Đảm bảo dữ liệu được lưu trước khi đăng xuất
+    if (currentUser) {
+        saveUserData();
+    }
+    
+    auth.signOut().then(() => {
+        // Reset dữ liệu về trạng thái mặc định khi đăng xuất
+        visitedLocations = {};
+        totalPoints = 0;
+        userRank = 'Bắt đầu';
+        
+        // Xóa dữ liệu local storage khi đăng xuất
+        localStorage.removeItem('visitedLocations');
+        localStorage.removeItem('totalPoints');
+        localStorage.removeItem('userRank');
+        
+        // Cập nhật UI
+        updatePointsDisplay();
+        updateStats();
+        renderProvinces();
+    });
 });
 
 function closeLoginModal() {
@@ -136,6 +155,7 @@ function closeLoginModal() {
     document.getElementById('signup-password').value = '';
 }
 
+// firebase-config.js - Cập nhật xử lý đăng nhập/đăng xuất
 // Tải dữ liệu từ Firestore
 function loadUserData() {
     if (!currentUser) return;
@@ -144,14 +164,11 @@ function loadUserData() {
         .then((doc) => {
             if (doc.exists) {
                 const userData = doc.data();
-                visitedLocations = userData.visitedLocations || {};
-                totalPoints = userData.totalPoints || 0;
-                userRank = userData.userRank || 'Bắt đầu';
+                // Đồng bộ dữ liệu từ Firestore về biến local
+                syncUserDataToLocal(userData);
                 
-                // Cập nhật UI
-                updatePointsDisplay();
-                updateStats();
-                renderProvinces();
+                // Đảm bảo dữ liệu local được cập nhật
+                updateVisitedLocations();
             } else {
                 // Tạo tài liệu mới nếu chưa tồn tại
                 saveUserData();
@@ -161,6 +178,7 @@ function loadUserData() {
             console.error("Lỗi tải dữ liệu:", error);
         });
 }
+
 
 // Lưu dữ liệu lên Firestore
 function saveUserData() {
@@ -177,6 +195,9 @@ function saveUserData() {
     };
     
     db.collection('users').doc(currentUser.uid).set(userData, { merge: true })
+        .then(() => {
+            console.log("Dữ liệu đã được lưu lên Firestore");
+        })
         .catch((error) => {
             console.error("Lỗi lưu dữ liệu:", error);
         });
@@ -196,6 +217,7 @@ function loadLocalData() {
     updateStats();
     renderProvinces();
 }
+
 
 // Cập nhật hàm addPoints và subtractPoints để lưu dữ liệu
 const originalAddPoints = addPoints;

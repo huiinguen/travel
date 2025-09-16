@@ -1,3 +1,4 @@
+<!-- index.html - Cập nhật phần thành tựu -->
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -27,12 +28,6 @@
                     <div class="rank">Bắt đầu <i class="fas fa-seedling"></i></div>
                 </div>
             </div>
-            <div class="points-display">
-                <div class="points">0 điểm</div>
-                <div class="progress-bar">
-                    <div class="progress"></div>
-                </div>
-            </div>
             <div class="auth-buttons">
                 <button id="login-btn" class="auth-btn">Đăng nhập</button>
                 <button id="logout-btn" class="auth-btn" style="display: none;">Đăng xuất</button>
@@ -54,9 +49,11 @@
                     <div class="stat-value">0</div>
                     <div class="stat-label">Địa điểm</div>
                 </div>
-                <div class="stat-item">
-                    <div class="stat-value">#10</div>
-                    <div class="stat-label">Hạng của bạn</div>
+                <div class="stat-item points-stat">
+                    <button id="achievement-btn" class="achievement-button">
+                        <div class="stat-value points">0</div>
+                        <div class="stat-label">Thành tựu</div>
+                    </button>
                 </div>
             </div>
 
@@ -67,6 +64,33 @@
                 </div>
             </div>
         </main>
+    </div>
+
+    <!-- Modal thành tựu -->
+    <div id="achievement-modal" class="modal">
+        <div class="modal-content glass-card achievement-modal-content">
+            <div class="modal-header">
+                <h2>Thành tựu của bạn</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body achievement-body">
+                <div class="achievement-image-container">
+                    <div class="achievement-image" id="achievement-image">
+                        <i class="fas fa-seedling" id="achievement-icon"></i>
+                    </div>
+                </div>
+                <div class="achievement-info">
+                    <div class="achievement-rank" id="achievement-rank">Lãng Tử Bụi Đường</div>
+                    <div class="achievement-points" id="achievement-points">0 điểm</div>
+                    <div class="achievement-progress">
+                        <div class="progress-bar">
+                            <div class="progress" id="achievement-progress"></div>
+                        </div>
+                        <div class="progress-text" id="progress-text">0% đến rank tiếp theo</div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Modal đăng nhập -->
