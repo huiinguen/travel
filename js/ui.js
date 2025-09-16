@@ -68,7 +68,7 @@ function renderProvinces() {
                 }
                 
                 // Lưu vào localStorage
-                localStorage.setItem('visitedLocations', JSON.stringify(visitedLocations));
+                updateVisitedLocations();
                 
                 // Cập nhật UI
                 updateStats();

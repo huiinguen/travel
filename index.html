@@ -7,6 +7,11 @@
     <link rel="stylesheet" href="css/glassmorphism.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Thêm Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
     <div class="background-blur"></div>
@@ -15,10 +20,10 @@
         <header class="glass-card header">
             <div class="user-info">
                 <div class="avatar">
-                    <i class="fas fa-user"></i>
+                    <i class="fas fa-user" id="user-avatar"></i>
                 </div>
                 <div class="user-details">
-                    <h2>Người Dùng</h2>
+                    <h2 id="user-name">Người Dùng</h2>
                     <div class="rank">Bắt đầu <i class="fas fa-seedling"></i></div>
                 </div>
             </div>
@@ -27,6 +32,10 @@
                 <div class="progress-bar">
                     <div class="progress"></div>
                 </div>
+            </div>
+            <div class="auth-buttons">
+                <button id="login-btn" class="auth-btn">Đăng nhập</button>
+                <button id="logout-btn" class="auth-btn" style="display: none;">Đăng xuất</button>
             </div>
         </header>
 
@@ -60,6 +69,43 @@
         </main>
     </div>
 
+    <!-- Modal đăng nhập -->
+    <div id="login-modal" class="modal">
+        <div class="modal-content glass-card">
+            <div class="modal-header">
+                <h2>Đăng nhập</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="login-options">
+                    <button id="google-login" class="social-login-btn">
+                        <i class="fab fa-google"></i> Đăng nhập với Google
+                    </button>
+                    <button id="email-login" class="social-login-btn">
+                        <i class="fas fa-envelope"></i> Đăng nhập với Email
+                    </button>
+                </div>
+                <div id="email-login-form" style="display: none; margin-top: 20px;">
+                    <input type="email" id="login-email" placeholder="Email" class="form-input">
+                    <input type="password" id="login-password" placeholder="Mật khẩu" class="form-input">
+                    <button id="submit-login" class="auth-btn">Đăng nhập</button>
+                    <p style="text-align: center; margin-top: 10px;">
+                        Chưa có tài khoản? <a href="#" id="show-signup">Đăng ký</a>
+                    </p>
+                </div>
+                <div id="email-signup-form" style="display: none; margin-top: 20px;">
+                    <input type="text" id="signup-name" placeholder="Tên hiển thị" class="form-input">
+                    <input type="email" id="signup-email" placeholder="Email" class="form-input">
+                    <input type="password" id="signup-password" placeholder="Mật khẩu (ít nhất 6 ký tự)" class="form-input">
+                    <button id="submit-signup" class="auth-btn">Đăng ký</button>
+                    <p style="text-align: center; margin-top: 10px;">
+                        Đã có tài khoản? <a href="#" id="show-login">Đăng nhập</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal chi tiết địa điểm -->
     <div id="location-modal" class="modal">
         <div class="modal-content glass-card">
@@ -76,6 +122,7 @@
     </div>
 
     <script src="js/data.js"></script>
+    <script src="js/firebase-config.js"></script> <!-- Tệp cấu hình Firebase mới -->
     <script src="js/points.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/app.js"></script>

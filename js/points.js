@@ -15,19 +15,31 @@ function updatePointsDisplay() {
     userRank = ranks[currentRankIndex].name;
     document.querySelector('.rank').innerHTML = `${userRank} <i class="fas ${ranks[currentRankIndex].icon}"></i>`;
     
-    // Lưu vào localStorage
-    localStorage.setItem('totalPoints', totalPoints);
-    localStorage.setItem('userRank', userRank);
+    // Chỉ lưu vào localStorage khi không có user
+    if (!currentUser) {
+        localStorage.setItem('totalPoints', totalPoints);
+        localStorage.setItem('userRank', userRank);
+    }
 }
 
 function addPoints(points) {
     totalPoints += points;
     updatePointsDisplay();
+    if (currentUser) {
+        saveUserData();
+    } else {
+        localStorage.setItem('totalPoints', totalPoints);
+    }
 }
 
 function subtractPoints(points) {
     totalPoints = Math.max(0, totalPoints - points);
     updatePointsDisplay();
+    if (currentUser) {
+        saveUserData();
+    } else {
+        localStorage.setItem('totalPoints', totalPoints);
+    }
 }
 
 function calculateProvinceCompletion(provinceId) {
@@ -47,4 +59,13 @@ function updateStats() {
     
     document.querySelectorAll('.stat-item')[0].querySelector('.stat-value').textContent = visitedProvinces;
     document.querySelectorAll('.stat-item')[1].querySelector('.stat-value').textContent = visitedLocationsCount;
+}
+
+// Cập nhật hàm để chỉ lưu trạng thái visitedLocations khi có user
+function updateVisitedLocations() {
+    if (currentUser) {
+        saveUserData();
+    } else {
+        localStorage.setItem('visitedLocations', JSON.stringify(visitedLocations));
+    }
 }
