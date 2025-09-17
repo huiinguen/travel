@@ -1,0 +1,210 @@
+/* camera.css - nâng cấp */
+
+/* Nút icon trong header */
+.header-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.icon-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.icon-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.05);
+}
+
+/* Modal camera: giữ modal ở giữa, giới hạn kích thước, tránh overflow toàn trang */
+.camera-modal-content {
+    max-width: 600px;
+    width: 95%;
+    max-height: 85vh;
+    overflow: hidden; /* ẩn scroll của modal chính, nội dung bên trong quản lý riêng */
+    border-radius: 12px;
+}
+
+.camera-body {
+    padding: 0;
+}
+
+/* Container video giữ khu vực cố định (không đẩy page) */
+#camera-container {
+    width: 100%;
+    height: 0;
+    padding-bottom: 66.6667%; /* tỉ lệ 3:2 — thay đổi tuỳ ý; 75% trước là 4:3 */
+    position: relative;
+    background: #000;
+    border-radius: 8px 8px 0 0;
+    overflow: hidden;
+}
+
+/* Video và canvas lấp đầy container */
+#camera-video, #camera-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* PREVIEW CONTAINER được làm absolute overlay: KHÔNG đẩy down nội dung */
+#preview-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none; /* bật khi có hình */
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 16px;
+    box-sizing: border-box;
+    z-index: 12;
+    pointer-events: none; /* để tránh chặn event video khi ẩn */
+}
+
+/* Khi preview hiển thị, cho phép tương tác vào controls con */
+#preview-container[style*="display: flex"] {
+    pointer-events: auto;
+}
+
+/* Ảnh preview vừa vặn, giữ tỉ lệ, không làm page kéo dài */
+#photo-preview {
+    width: 100%;
+    height: calc(100% - 130px); /* dành chỗ cho controls bên dưới */
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.4);
+    background: rgba(0,0,0,0.3);
+}
+
+/* Controls xuất hiện trên overlay phía dưới */
+.photo-controls {
+    width: 100%;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Caption input style */
+#photo-caption {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.06);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.12);
+    box-sizing: border-box;
+    font-family: inherit;
+}
+
+/* Photo date text */
+.photo-date {
+    font-size: 13px;
+    opacity: 0.85;
+    text-align: center;
+    margin-top: 4px;
+}
+
+/* Buttons */
+.photo-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.photo-buttons .camera-btn {
+    flex: 1;
+    pointer-events: auto;
+}
+
+/* Capture controls (nút chụp) nằm bên dưới modal, bên ngoài camera container */
+#capture-controls {
+    padding: 14px 20px;
+    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(0,0,0,0.12);
+}
+
+/* Buttons */
+.camera-btn {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 16px;
+}
+
+.camera-btn:hover {
+    background: rgba(255, 255, 255, 0.16);
+}
+
+.camera-btn.primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.camera-btn.secondary {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* Hiệu ứng flash */
+@keyframes flash {
+    0% { opacity: 0; }
+    50% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+.flash-effect {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 11;
+}
+
+.flash-animation {
+    animation: flash 0.5s ease;
+}
+
+/* Ngăn body cuộn khi modal mở */
+body.no-scroll {
+    overflow: hidden;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .camera-modal-content {
+        width: 96%;
+    }
+    #photo-preview {
+        height: calc(100% - 150px);
+    }
+    .photo-buttons {
+        flex-direction: column;
+    }
+}
