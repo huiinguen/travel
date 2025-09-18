@@ -1,6 +1,6 @@
-<!-- index.html - Cập nhật phần thành tựu và bổ sung camera -->
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,14 +10,15 @@
     <link rel="stylesheet" href="css/camera.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Thêm Firebase SDK -->
+
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 </head>
+
 <body>
     <div class="background-blur"></div>
-    
+
     <div class="container">
         <header class="glass-card header">
             <div class="user-info">
@@ -66,17 +67,14 @@
             <div class="locations-container">
                 <h2 class="section-title">Tỉnh thành tại Việt Nam</h2>
                 <div id="provinces-list" class="provinces-list">
-                    <!-- Danh sách tỉnh thành sẽ được tạo bằng JavaScript -->
                 </div>
             </div>
         </main>
     </div>
-
-    <!-- Modal thành tựu -->
     <div id="achievement-modal" class="modal">
         <div class="modal-content glass-card achievement-modal-content">
             <div class="modal-header">
-                <h2>Thành tựu của bạn</h2>
+                <h2>Thành tựu đi phượt</h2>
                 <span class="close">&times;</span>
             </div>
             <div class="modal-body achievement-body">
@@ -91,15 +89,14 @@
                     <div class="achievement-progress">
                         <div class="progress-bar">
                             <div class="progress" id="achievement-progress"></div>
+                            <span class="progress-percentage" id="progress-percentage">0%</span>
                         </div>
-                        <div class="progress-text" id="progress-text">0% đến rank tiếp theo</div>
+                        <div class="progress-text" id="progress-text">Bắt đầu hành trình!</div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- Modal đăng nhập -->
     <div id="login-modal" class="modal">
         <div class="modal-content glass-card">
             <div class="modal-header">
@@ -126,7 +123,8 @@
                 <div id="email-signup-form" style="display: none; margin-top: 20px;">
                     <input type="text" id="signup-name" placeholder="Tên hiển thị" class="form-input">
                     <input type="email" id="signup-email" placeholder="Email" class="form-input">
-                    <input type="password" id="signup-password" placeholder="Mật khẩu (ít nhất 6 ký tự)" class="form-input">
+                    <input type="password" id="signup-password" placeholder="Mật khẩu (ít nhất 6 ký tự)"
+                        class="form-input">
                     <button id="submit-signup" class="auth-btn">Đăng ký</button>
                     <p style="text-align: center; margin-top: 10px;">
                         Đã có tài khoản? <a href="#" id="show-login">Đăng nhập</a>
@@ -136,7 +134,6 @@
         </div>
     </div>
 
-    <!-- Modal chi tiết địa điểm -->
     <div id="location-modal" class="modal">
         <div class="modal-content glass-card">
             <div class="modal-header">
@@ -145,13 +142,11 @@
             </div>
             <div class="modal-body">
                 <div id="location-details">
-                    <!-- Chi tiết địa điểm sẽ được thêm bằng JavaScript -->
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Modal camera -->
     <div id="camera-modal" class="modal">
         <div class="modal-content glass-card camera-modal-content">
             <div class="modal-header">
@@ -164,6 +159,9 @@
                     <canvas id="camera-canvas" style="display: none;"></canvas>
                 </div>
                 <div id="capture-controls">
+                    <button id="flip-camera-btn" class="camera-btn secondary" title="Xoay camera">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
                     <button id="capture-btn" class="camera-btn">
                         <i class="fas fa-camera"></i> Chụp ảnh
                     </button>
@@ -172,7 +170,6 @@
                     <img id="photo-preview" alt="Ảnh đã chụp">
                     <div class="photo-controls">
                         <input type="text" id="photo-caption" placeholder="Thêm mô tả cho ảnh...">
-                        <div class="photo-date" id="photo-date"></div>
                         <div class="photo-buttons">
                             <button id="retake-btn" class="camera-btn secondary">
                                 <i class="fas fa-redo"></i> Chụp lại
@@ -194,4 +191,5 @@
     <script src="js/camera.js"></script>
     <script src="js/app.js"></script>
 </body>
+
 </html>

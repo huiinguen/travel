@@ -60,6 +60,11 @@
     object-fit: cover;
 }
 
+/* Thêm style để lật video trên máy tính */
+#camera-video.mirrored {
+    transform: scaleX(-1);
+}
+
 /* PREVIEW CONTAINER được làm absolute overlay: KHÔNG đẩy down nội dung */
 #preview-container {
     position: absolute;
@@ -138,6 +143,11 @@
     text-align: center;
     border-top: 1px solid rgba(255, 255, 255, 0.06);
     background: rgba(0,0,0,0.12);
+    /* Cập nhật để căn chỉnh các nút */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
 }
 
 /* Buttons */
@@ -155,6 +165,20 @@
     gap: 8px;
     font-size: 16px;
 }
+
+/* Nút xoay camera nhỏ hơn */
+#capture-controls .camera-btn.secondary {
+    padding: 12px;
+    width: 48px;
+    height: 48px;
+    font-size: 18px;
+}
+
+#capture-controls #capture-btn {
+    flex-grow: 1;
+    max-width: 200px;
+}
+
 
 .camera-btn:hover {
     background: rgba(255, 255, 255, 0.16);

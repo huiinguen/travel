@@ -560,3 +560,34 @@
     align-items: center;
     gap: 10px;
 }
+/* Thêm vào cuối file style.css */
+
+/* Cải tiến thanh tiến trình trong modal thành tựu */
+.achievement-progress .progress-bar {
+    position: relative; /* Quan trọng để định vị text phần trăm */
+    width: 100%;
+    height: 22px; /* Tăng chiều cao để chứa text */
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 11px;
+    /* Bỏ overflow: hidden để text không bị cắt */
+}
+
+.achievement-progress .progress {
+    height: 100%;
+    border-radius: 11px;
+    /* Giữ nguyên các thuộc tính khác */
+}
+
+/* Kiểu chữ cho phần trăm trên thanh tiến trình */
+.progress-percentage {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2; /* Đảm bảo text luôn nổi lên trên */
+    color: white;
+    font-size: 13px;
+    font-weight: bold;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6); /* Đổ bóng để dễ đọc */
+    pointer-events: none; /* Tránh text bắt các sự kiện click */
+}

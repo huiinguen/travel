@@ -1,4 +1,4 @@
-// Hiển thị danh sách tỉnh thành
+// Hiển thị danh sách tỉnh thành (chỉ tên tỉnh)
 function renderProvinces() {
     const provincesList = document.getElementById('provinces-list');
     provincesList.innerHTML = '';
@@ -16,79 +16,99 @@ function renderProvinces() {
                     <i class="fas fa-check"></i>
                 </div>
             </div>
-            <div class="location-list">
-                ${province.locations.map(location => {
-            const isVisited = visitedLocations[location.id];
-            return `
-                    <div class="location-item ${isVisited ? 'visited' : ''}" data-id="${location.id}">
-                        <span class="location-name">${location.name}</span>
-                        <div style="display: flex; align-items: center;">
-                            <span class="location-points">${location.points} điểm</span>
-                            <div class="location-check ${isVisited ? 'checked' : ''}">
-                                <i class="fas fa-check"></i>
-                            </div>
-                        </div>
-                    </div>
-                    `;
-        }).join('')}
-            </div>
         `;
 
-        provincesList.appendChild(provinceElement);
-
-        // ui.js - Cập nhật xử lý sự kiện click địa điểm
-        // Thêm sự kiện click cho toàn bộ hàng địa điểm
-        provinceElement.querySelectorAll('.location-item').forEach(item => {
-            item.addEventListener('click', function (e) {
-                // Ngăn sự kiện click lan ra các phần tử cha
-                e.stopPropagation();
-
-                const locationId = parseInt(this.dataset.id);
-                const location = province.locations.find(loc => loc.id === locationId);
-                const wasVisited = visitedLocations[locationId];
-
-                if (wasVisited) {
-                    // Nếu đã tích rồi thì bỏ tích
-                    delete visitedLocations[locationId];
-                    subtractPoints(location.points);
-                    this.classList.remove('visited');
-                    this.querySelector('.location-check').classList.remove('checked');
-                } else {
-                    // Nếu chưa tích thì tích và thêm hiệu ứng
-                    visitedLocations[locationId] = true;
-                    addPoints(location.points);
-                    this.classList.add('visited');
-                    const checkElement = this.querySelector('.location-check');
-                    checkElement.classList.add('checked');
-                    checkElement.classList.add('check-animation');
-
-                    // Xóa class animation sau khi hoàn thành
-                    setTimeout(() => {
-                        checkElement.classList.remove('check-animation');
-                    }, 300);
-                }
-
-                // Lưu trạng thái (cập nhật tự động trong updateVisitedLocations)
-                // Cập nhật UI
-                updateStats();
-
-                // Kiểm tra xem tỉnh đã hoàn thành chưa
-                const provinceCompletion = calculateProvinceCompletion(province.id);
-                const provinceCheck = provinceElement.querySelector('.province-check');
-                if (provinceCompletion === 100) {
-                    provinceCheck.classList.add('checked');
-                } else {
-                    provinceCheck.classList.remove('checked');
-                }
-            });
+        // Thêm sự kiện click để hiển thị modal
+        provinceElement.addEventListener('click', function () {
+            showLocationsModal(province);
         });
+
+        provincesList.appendChild(provinceElement);
     });
 }
 
-// Xử lý modal
+// Hàm mới để hiển thị modal chứa danh sách địa điểm con
+function showLocationsModal(province) {
+    const modal = document.getElementById('location-modal');
+    const modalTitle = document.getElementById('modal-title');
+    const locationDetails = document.getElementById('location-details');
+    
+    // Cập nhật tiêu đề modal
+    modalTitle.textContent = province.name;
+    
+    // Xóa nội dung cũ
+    locationDetails.innerHTML = '';
+
+    // Tạo danh sách các địa điểm
+    province.locations.forEach(location => {
+        const isVisited = visitedLocations[location.id];
+        const locationItem = document.createElement('div');
+        locationItem.className = `location-item ${isVisited ? 'visited' : ''}`;
+        locationItem.dataset.id = location.id;
+        locationItem.innerHTML = `
+            <span class="location-name">${location.name}</span>
+            <div style="display: flex; align-items: center;">
+                <span class="location-points">${location.points} điểm</span>
+                <div class="location-check ${isVisited ? 'checked' : ''}">
+                    <i class="fas fa-check"></i>
+                </div>
+            </div>
+        `;
+
+        // Thêm sự kiện click cho từng địa điểm trong modal
+        locationItem.addEventListener('click', function (e) {
+            e.stopPropagation();
+
+            const locationId = parseInt(this.dataset.id);
+            const wasVisited = visitedLocations[locationId];
+
+            if (wasVisited) {
+                delete visitedLocations[locationId];
+                subtractPoints(location.points);
+                this.classList.remove('visited');
+                this.querySelector('.location-check').classList.remove('checked');
+            } else {
+                visitedLocations[locationId] = true;
+                addPoints(location.points);
+                this.classList.add('visited');
+                const checkElement = this.querySelector('.location-check');
+                checkElement.classList.add('checked');
+                checkElement.classList.add('check-animation');
+
+                setTimeout(() => {
+                    checkElement.classList.remove('check-animation');
+                }, 300);
+            }
+
+            // Cập nhật thống kê và trạng thái hoàn thành tỉnh
+            updateStats();
+            updateProvinceCompletion(province.id);
+        });
+        
+        locationDetails.appendChild(locationItem);
+    });
+
+    // Hiển thị modal
+    modal.style.display = 'block';
+}
+
+// Hàm cập nhật trạng thái hoàn thành của một tỉnh cụ thể
+function updateProvinceCompletion(provinceId) {
+    const provinceElement = document.querySelector(`.province-item .province-check`);
+    const completion = calculateProvinceCompletion(provinceId);
+    
+    if (completion === 100) {
+        provinceElement.classList.add('checked');
+    } else {
+        provinceElement.classList.remove('checked');
+    }
+}
+
+
+// Xử lý modal (giữ nguyên)
 function setupModal() {
     const modal = document.getElementById('location-modal');
-    const closeBtn = document.querySelector('.close');
+    const closeBtn = document.querySelector('#location-modal .close'); // Đảm bảo chọn đúng nút close
 
     closeBtn.addEventListener('click', function () {
         modal.style.display = 'none';
@@ -101,7 +121,7 @@ function setupModal() {
     });
 }
 
-// Tìm kiếm
+// Tìm kiếm (giữ nguyên)
 function setupSearch() {
     const searchInput = document.getElementById('search-input');
 
@@ -110,48 +130,42 @@ function setupSearch() {
 
         document.querySelectorAll('.province-item').forEach(provinceElement => {
             const provinceName = provinceElement.querySelector('.province-name').textContent.toLowerCase();
-            const locationItems = provinceElement.querySelectorAll('.location-item');
-
-            let hasMatch = provinceName.includes(searchTerm);
-
-            locationItems.forEach(item => {
-                const locationName = item.querySelector('.location-name').textContent.toLowerCase();
-                const matches = locationName.includes(searchTerm);
-
-                item.style.display = matches || hasMatch ? 'flex' : 'none';
-
-                if (matches) hasMatch = true;
-            });
-
+            
+            // Tìm kiếm chỉ dựa trên tên tỉnh
+            const hasMatch = provinceName.includes(searchTerm);
+            
             provinceElement.style.display = hasMatch ? 'block' : 'none';
         });
     });
 }
-// ui.js - Cập nhật hàm cập nhật modal thành tích
+
+// Hàm cập nhật modal thành tích (giữ nguyên)
 function updateAchievementModal() {
     const nextRankIndex = ranks.findIndex(rank => rank.minPoints > totalPoints);
-    const currentRankIndex = nextRankIndex > 0 ? nextRankIndex - 1 : 0;
+    const currentRankIndex = nextRankIndex === -1 ? ranks.length - 1 : (nextRankIndex > 0 ? nextRankIndex - 1 : 0);
     const currentRank = ranks[currentRankIndex];
-    const nextRank = nextRankIndex >= 0 ? ranks[nextRankIndex] : null;
-    
-    // Cập nhật icon
+    const nextRank = nextRankIndex !== -1 ? ranks[nextRankIndex] : null;
+
     document.getElementById('achievement-icon').className = `fas ${currentRank.icon}`;
-    
-    // Cập nhật rank
     document.getElementById('achievement-rank').textContent = currentRank.name;
-    
-    // Cập nhật điểm
     document.getElementById('achievement-points').textContent = `${totalPoints} điểm`;
     
-    // Cập nhật progress bar
     let progressPercentage = 100;
+    let progressText = "Bạn đã đạt thứ hạng cao nhất! 🎉";
     
     if (nextRank) {
-        const currentRankPoints = currentRankIndex > 0 ? currentRank.minPoints : 0;
-        progressPercentage = ((totalPoints - currentRankPoints) / (nextRank.minPoints - currentRankPoints)) * 100;
+        const pointsForCurrentRank = currentRank.minPoints;
+        const pointsForNextRank = nextRank.minPoints;
+        const pointsNeeded = pointsForNextRank - pointsForCurrentRank;
+        const pointsEarned = totalPoints - pointsForCurrentRank;
+        
+        progressPercentage = (pointsEarned / pointsNeeded) * 100;
+        progressText = `Còn ${pointsForNextRank - totalPoints} điểm để tới ${nextRank.name}`;
     }
     
     const roundedPercentage = Math.round(progressPercentage);
-    document.getElementById('achievement-progress').style.width = `${Math.min(progressPercentage, 100)}%`;
+
+    document.getElementById('achievement-progress').style.width = `${Math.min(roundedPercentage, 100)}%`;
     document.getElementById('progress-percentage').textContent = `${roundedPercentage}%`;
+    document.getElementById('progress-text').textContent = progressText;
 }
